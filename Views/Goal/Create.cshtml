@@ -1,0 +1,53 @@
+@model FinancialGoal
+@{
+    ViewData["Title"] = "Thêm mục tiêu";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>🎯 Thêm mục tiêu tài chính</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Tên mục tiêu</label>
+                            <input asp-for="Name" class="form-control" placeholder="Ví dụ: Mua nhà, Du lịch..." />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TargetAmount" class="form-label">Số tiền mục tiêu</label>
+                            <input asp-for="TargetAmount" class="form-control" type="number" step="1000" />
+                            <span asp-validation-for="TargetAmount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="CurrentAmount" class="form-label">Số tiền hiện tại</label>
+                            <input asp-for="CurrentAmount" class="form-control" type="number" step="1000" value="0" />
+                            <span asp-validation-for="CurrentAmount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TargetDate" class="form-label">Ngày dự kiến hoàn thành</label>
+                            <input asp-for="TargetDate" class="form-control" type="date" />
+                            <span asp-validation-for="TargetDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Hình ảnh mục tiêu (tùy chọn)</label>
+                            <input type="file" name="image" class="form-control" accept="image/*" />
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Lưu</button>
+                            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

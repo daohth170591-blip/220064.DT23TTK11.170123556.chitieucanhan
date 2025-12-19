@@ -1,0 +1,67 @@
+@model List<Budget>
+@{
+    ViewData["Title"] = "Quản lý ngân sách";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>💼 Quản lý ngân sách</h2>
+        <a asp-action="Create" class="btn btn-primary">+ Thêm ngân sách</a>
+    </div>
+
+    <div class="row">
+        @foreach (var budget in Model)
+        {
+            var spent = ViewData[$"Spent_{budget.Id}"] != null ? (decimal)ViewData[$"Spent_{budget.Id}"] : 0m;
+            var remaining = budget.Amount - spent;
+            var percentage = budget.Amount > 0 ? (spent / budget.Amount) * 100 : 0;
+            var progressClass = percentage > 90 ? "bg-danger" : percentage > 70 ? "bg-warning" : "bg-success";
+
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5>@budget.Category.Icon @budget.Category.Name</h5>
+                            <form asp-action="Delete" asp-route-id="@budget.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                            </form>
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Đã chi: @spent.ToString("N0") đ</span>
+                                <span>Ngân sách: @budget.Amount.ToString("N0") đ</span>
+                            </div>
+                            <div class="progress" style="height: 25px;">
+                                <div class="progress-bar @progressClass" style="width: @percentage%">
+                                    @percentage.ToString("F0")%
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-muted small">
+                            <div>Còn lại: <strong class="@(remaining < 0 ? "text-danger" : "text-success")">@remaining.ToString("N0") đ</strong></div>
+                            <div>Từ @budget.StartDate.ToString("dd/MM/yyyy") đến @budget.EndDate.ToString("dd/MM/yyyy")</div>
+                        </div>
+
+                        @if (percentage > 90)
+                        {
+                            <div class="alert alert-danger mt-2 mb-0">
+                                ⚠️ Cảnh báo: Bạn đã chi gần hết ngân sách!
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="col-12">
+                <div class="alert alert-info">
+                    Chưa có ngân sách nào. Hãy tạo ngân sách để quản lý chi tiêu tốt hơn!
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,146 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Tổng quan";
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">📊 Tổng quan tài chính</h2>
+
+    <!-- Thẻ thống kê -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">💵 Tổng thu nhập</h5>
+                    <h2>@Model.TotalIncome.ToString("N0") đ</h2>
+                    <small>Tháng này</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">💸 Tổng chi tiêu</h5>
+                    <h2>@Model.TotalExpense.ToString("N0") đ</h2>
+                    <small>Tháng này</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">💰 Số dư</h5>
+                    <h2>@Model.Balance.ToString("N0") đ</h2>
+                    <small>Còn lại</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Biểu đồ chi tiêu theo danh mục -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>📈 Chi tiêu theo danh mục</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Giao dịch gần đây -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>🕒 Giao dịch gần đây</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ngày</th>
+                                    <th>Danh mục</th>
+                                    <th>Số tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var transaction in Model.RecentTransactions)
+                                {
+                                    <tr>
+                                        <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
+                                        <td>@transaction.Category.Icon @transaction.Category.Name</td>
+                                        <td class="@(transaction.Type == TransactionType.Income ? "text-success" : "text-danger")">
+                                            @(transaction.Type == TransactionType.Income ? "+" : "-")@transaction.Amount.ToString("N0") đ
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mục tiêu tài chính -->
+    @if (Model.FinancialGoals.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>🎯 Mục tiêu tài chính</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var goal in Model.FinancialGoals)
+                            {
+                                var progress = (goal.CurrentAmount / goal.TargetAmount) * 100;
+                                <div class="col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6>@goal.Name</h6>
+                                            <div class="progress mb-2">
+                                                <div class="progress-bar" style="width: @progress%">@progress.ToString("F0")%</div>
+                                            </div>
+                                            <small>@goal.CurrentAmount.ToString("N0") / @goal.TargetAmount.ToString("N0") đ</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        const ctx = document.getElementById('expenseChart');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.ExpenseByCategory.Keys)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(Model.ExpenseByCategory.Values)),
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -1,0 +1,47 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">📊 Tổng quan hệ thống</h2>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">👥 Tổng người dùng</h5>
+                    <h2>@ViewBag.TotalUsers</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">💳 Tổng giao dịch</h5>
+                    <h2>@ViewBag.TotalTransactions</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">📁 Tổng danh mục</h5>
+                    <h2>@ViewBag.TotalCategories</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5>Chào mừng đến với trang quản trị</h5>
+                    <p>Sử dụng menu bên trên để quản lý người dùng, danh mục và các cài đặt hệ thống.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

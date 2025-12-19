@@ -1,0 +1,57 @@
+========================================
+HƯỚNG DẪN NHANH - WEBSITE QUẢN LÝ CHI TIÊU
+========================================
+
+BƯỚC 1: CÀI ĐẶT SQL SERVER
+---------------------------
+- Tải SQL Server Express: https://www.microsoft.com/en-us/sql-server/sql-server-downloads
+- Hoặc cài SQL Server LocalDB (nhẹ hơn)
+
+BƯỚC 2: CẬP NHẬT CONNECTION STRING
+-----------------------------------
+Mở file: appsettings.json
+Thay đổi connection string phù hợp với SQL Server của bạn:
+
+Ví dụ với SQL Express:
+"DefaultConnection": "Server=.\\SQLEXPRESS;Database=ExpenseManagerDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+
+BƯỚC 3: TẠO DATABASE
+---------------------
+Mở Command Prompt tại thư mục dự án, chạy:
+> dotnet ef database update
+
+BƯỚC 4: CHẠY ỨNG DỤNG
+----------------------
+> dotnet run
+
+Hoặc nhấn F5 trong Visual Studio
+
+BƯỚC 5: TRUY CẬP
+----------------
+Mở trình duyệt: https://localhost:5001
+
+BƯỚC 6: ĐĂNG KÝ TÀI KHOẢN
+--------------------------
+- Click "Đăng ký ngay"
+- Điền thông tin và tạo tài khoản
+
+TẠO TÀI KHOẢN ADMIN
+--------------------
+Sau khi đăng ký, vào SQL Server và chạy:
+UPDATE Users SET IsAdmin = 1 WHERE Email = 'email@cua@ban.com'
+
+TÍNH NĂNG CHÍNH
+----------------
+✓ Đăng nhập/Đăng ký
+✓ Trang tổng quan với biểu đồ
+✓ Quản lý giao dịch thu/chi
+✓ Quản lý ngân sách
+✓ Mục tiêu tài chính
+✓ Quản trị viên (User, Category)
+
+HỖ TRỢ
+------
+Xem file HUONG_DAN.md để biết chi tiết
+Xem file TINH_NANG.md để xem danh sách tính năng
+
+========================================

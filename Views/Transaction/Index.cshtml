@@ -1,0 +1,85 @@
+@model List<Transaction>
+@{
+    ViewData["Title"] = "Quản lý giao dịch";
+}
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>💳 Quản lý giao dịch</h2>
+        <a asp-action="Create" class="btn btn-primary">+ Thêm giao dịch</a>
+    </div>
+
+    <!-- Bộ lọc -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" name="search" class="form-control" placeholder="Tìm kiếm..." value="@Context.Request.Query["search"]" />
+                </div>
+                <div class="col-md-2">
+                    <select name="categoryId" class="form-select">
+                        <option value="">Tất cả danh mục</option>
+                        @foreach (var cat in ViewBag.Categories as List<Category>)
+                        {
+                            <option value="@cat.Id">@cat.Icon @cat.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="fromDate" class="form-control" value="@Context.Request.Query["fromDate"]" />
+                </div>
+                <div class="col-md-2">
+                    <input type="date" name="toDate" class="form-control" value="@Context.Request.Query["toDate"]" />
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                    <a asp-action="Index" class="btn btn-secondary">Xóa lọc</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Danh sách giao dịch -->
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Danh mục</th>
+                            <th>Mô tả</th>
+                            <th>Loại</th>
+                            <th>Số tiền</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var transaction in Model)
+                        {
+                            <tr>
+                                <td>@transaction.Date.ToString("dd/MM/yyyy")</td>
+                                <td>@transaction.Category.Icon @transaction.Category.Name</td>
+                                <td>@transaction.Description</td>
+                                <td>
+                                    <span class="badge @(transaction.Type == TransactionType.Income ? "bg-success" : "bg-danger")">
+                                        @(transaction.Type == TransactionType.Income ? "Thu nhập" : "Chi tiêu")
+                                    </span>
+                                </td>
+                                <td class="@(transaction.Type == TransactionType.Income ? "text-success" : "text-danger")">
+                                    @(transaction.Type == TransactionType.Income ? "+" : "-")@transaction.Amount.ToString("N0") đ
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@transaction.Id" class="btn btn-sm btn-warning">Sửa</a>
+                                    <form asp-action="Delete" asp-route-id="@transaction.Id" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
